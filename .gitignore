@@ -1,0 +1,39 @@
+# Build artifacts
+build/
+sdkconfig
+
+# IDE and editor specific files
+.vscode/
+.idea/
+_build/  # For Eclipse users
+
+# Object files
+*.o
+*.obj
+
+# Dependency caches
+CMakeCache.txt
+idf.build.ninja
+
+# Generated files (may vary based on specific configuration)
+*.elf
+*.map
+*.bin
+*.dat
+
+# Temporary files
+*.temp
+*.tmp
+
+# Thumbs.db and other OS-specific hidden files
+thumbs.db
+DS_Store
+
+# Logs
+*.log
+
+# IDE specific project configuration files
+# Adjust these lines based on your IDE
+project.xcworkspace/
+xcuserdata/
+project.pbxproj/
