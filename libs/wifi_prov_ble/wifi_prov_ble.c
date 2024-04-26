@@ -10,7 +10,7 @@ static EventGroupHandle_t wifi_event_group;
 #define PROV_TRANSPORT_BLE "ble"
 #define QRCODE_BASE_URL "https://espressif.github.io/esp-jumpstart/qrcode.html"
 
-int global_max_retries_on_failure = 0;
+int global_max_retries_after_wifi_connection_failed = 0;
 
 /* Event handler for catching system events */
 static void event_handler(void *arg, esp_event_base_t event_base,
@@ -40,7 +40,7 @@ static void event_handler(void *arg, esp_event_base_t event_base,
                           "\n\tPlease reset to factory and retry provisioning",
                      (*reason == WIFI_PROV_STA_AUTH_ERROR) ? "Wi-Fi station authentication failed" : "Wi-Fi access-point not found");
             retries++;
-            if (retries >= global_max_retries_on_failure)
+            if (retries >= global_max_retries_after_wifi_connection_failed)
             {
                 ESP_LOGI(TAG, "Failed to connect with provisioned AP, reseting provisioned credentials");
                 wifi_prov_mgr_reset_sm_state_on_failure();
@@ -167,9 +167,9 @@ static void wifi_prov_print_qr(const char *name, const char *pop, const char *tr
 }
 
 void wifi_prov_ble(char *ssid_prefix, char *password,
-                   char *custom_endpoint,
-                   int max_retries_on_failure,
-                   bool reset_prov_after_failed, bool show_qr_code)
+                char *custom_endpoint,
+                int max_retries_after_wifi_connection_failed,
+                bool show_qr_code)
 {
     /* Initialize TCP/IP */
     ESP_ERROR_CHECK(esp_netif_init());
@@ -216,12 +216,8 @@ void wifi_prov_ble(char *ssid_prefix, char *password,
 
     bool provisioned = false;
 
-    global_max_retries_on_failure = max_retries_on_failure;
+    global_max_retries_after_wifi_connection_failed = max_retries_after_wifi_connection_failed;
 
-    if (reset_prov_after_failed)
-    {
-        wifi_prov_mgr_reset_provisioning();
-    }
     /* Let's find out if the device is provisioned */
     ESP_ERROR_CHECK(wifi_prov_mgr_is_provisioned(&provisioned));
 
@@ -324,9 +320,8 @@ void wifi_prov_ble(char *ssid_prefix, char *password,
     /* Wait for Wi-Fi connection */
     xEventGroupWaitBits(wifi_event_group, WIFI_CONNECTED_EVENT, true, true, portMAX_DELAY);
 
-    while (1)
-    {
-        ESP_LOGI(TAG, "Hello World!");
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
-    }
+}
+
+void wifi_prov_ble_reset_wifi(){
+    wifi_prov_mgr_reset_provisioning();
 }

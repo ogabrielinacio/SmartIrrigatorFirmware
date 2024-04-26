@@ -6,6 +6,8 @@
 #include "wifi_prov_ble.h"
 #include <esp_log.h>
 
+static const char *TAG = "main app";
+
 void app_main(void)
 {
      /* Initialize NVS partition */
@@ -19,5 +21,7 @@ void app_main(void)
         ESP_ERROR_CHECK(nvs_flash_init());
     }
 
-    wifi_prov_ble("PROV_", "passwd1234", "custom-endpoint", 4, true, true);
+    wifi_prov_ble("PROV_", "passwd1234", "custom-data", 2, true);
+
+    ESP_LOGI(TAG,"after prov");
 }

@@ -21,5 +21,7 @@
 
 void wifi_prov_ble(char *ssid_prefix, char *password,
                 char *custom_endpoint,
-                int max_retries_on_failure,
-                bool reset_prov_after_failed, bool show_qr_code);
+                int max_retries_after_wifi_connection_failed,
+                bool show_qr_code);
+
+void wifi_prov_ble_reset_wifi();
